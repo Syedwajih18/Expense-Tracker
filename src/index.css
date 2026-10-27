@@ -1,0 +1,212 @@
+/* ---------- Tokens ---------- */
+:root {
+  --bg: #edf1f2;
+  --surface: #ffffff;
+  --ink: #14232b;
+  --muted: #5a6b73;
+  --line: #d3dcdf;
+  --accent: #1d4e6b;
+  --accent-ink: #ffffff;
+  --income: #17775a;
+  --expense: #b0392b;
+  --radius: 6px;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1a20;
+  --surface: #16252d;
+  --ink: #e6eef1;
+  --muted: #8fa3ac;
+  --line: #28404b;
+  --accent: #6fb3d6;
+  --accent-ink: #0f1a20;
+  --income: #4cc39a;
+  --expense: #f0806f;
+  color-scheme: dark;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Schibsted Grotesk", system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+h1, h2, h3 { margin: 0; }
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.app-header h1 { font-size: 1.75rem; letter-spacing: -0.02em; }
+
+/* ---------- Form controls ---------- */
+input, select, button { font: inherit; }
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+button {
+  cursor: pointer;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+button:hover { border-color: var(--accent); }
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.error {
+  display: block;
+  margin-top: 4px;
+  color: var(--expense);
+  font-size: 0.85rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+}
+
+/* ---------- Summary (ledger strip) ---------- */
+.summary {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 1px;                      /* gap hi divider line ban jati hai */
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.summary .card { padding: 20px 24px; background: var(--surface); }
+.summary .balance { order: -1; }  /* Balance sab se pehle */
+.summary .card small { display: block; color: var(--muted); }
+.summary .card h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+.summary .balance h2 { font-size: 2.25rem; }
+.summary .income h2 { color: var(--income); }
+.summary .expense h2 { color: var(--expense); }
+
+/* ---------- Form ---------- */
+.transaction-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  align-items: start;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.transaction-form button[type="submit"] {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------- Charts ---------- */
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+.chart-box {
+  min-width: 0;                  /* grid mein chart overflow na kare */
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.chart-box h3 { margin-bottom: 12px; font-size: 1rem; }
+
+/* Recharts ko theme ke saath chalane ke liye */
+.recharts-text { fill: var(--muted); }
+.recharts-cartesian-grid line { stroke: var(--line); }
+.recharts-legend-item-text { color: var(--ink) !important; }
+.recharts-default-tooltip {
+  background-color: var(--surface) !important;
+  border-color: var(--line) !important;
+}
+
+/* ---------- Filter bar ---------- */
+.filter-bar {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr) auto;
+  gap: 12px;
+}
+.filter-bar input, .filter-bar select { background: var(--surface); }
+
+/* ---------- Transaction list ---------- */
+.transaction-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+}
+.item + .item { border-top: 1px solid var(--line); }
+.item small { display: block; color: var(--muted); }
+.item > span {
+  margin-right: 8px;
+  font-weight: 600;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.item.income > span { color: var(--income); }
+.item.expense > span { color: var(--expense); }
+.item button { padding: 6px 10px; line-height: 1; }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 720px) {
+  .app { padding: 20px 14px 48px; }
+  .summary { grid-template-columns: 1fr 1fr; }
+  .summary .balance { grid-column: 1 / -1; }
+  .filter-bar { grid-template-columns: 1fr 1fr; }
+  .filter-bar input[name="search"] { grid-column: 1 / -1; }
+  .item { padding: 12px 14px; }
+}
